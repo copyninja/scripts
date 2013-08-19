@@ -1,0 +1,28 @@
+#!/bin/sh
+set -eu
+
+notmuch new
+
+# debian-devel mails
+notmuch tag +debian-devel to:debian-devel@lists.debian.org and not tag:debian-devel
+# debian-mentors mails
+notmuch tag +debian-mentors to:debian-mentors@lists.debian.org and not tag:debian-mentors
+# debian-devel-announce
+notmuch tag +debian-devel-announce to:debian-devel-announce@lists.debian.org and not tag:debian-devel and not tag:debian-mentors
+# pkg-fonts mailing list
+notmuch tag +pkg-fonts to:pkg-fonts-devel@lists.alioth.debian.org
+# QA mail
+notmuch tag +debian-qa to:debian-qa@lists.debian.org
+
+# NM process
+notmuch tag +NM-Process '(' to:kamathvasudev@gmail.com and to:archive-vasudev@nm.debian.org ')'
+
+# Inbox lets try inbox with folder
+notmuch tag +inbox folder:INBOX
+
+# spam
+notmuch tag +spam folder:\[Gmail\].Spam
+
+# Remove inbox tags from mail which are in tagged already
+notmuch tag -inbox tag:debian-devel and tag:debian-mentors and tag:debian-devel-announce
+notmuch tag -inbox tag:pkg-fonts and tag:NM-Process
