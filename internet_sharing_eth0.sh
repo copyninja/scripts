@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
+
+set -eu
 
 # Restart the dnsmasq
 /etc/init.d/dnsmasq restart

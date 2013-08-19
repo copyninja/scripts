@@ -1,4 +1,6 @@
-#!/bin/zsh
+#!/bin/sh
+
+set -eu
 
 # Bring up the wlan0 interface
 ifconfig wlan0 up
