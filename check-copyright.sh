@@ -20,7 +20,7 @@ CURDIR=$(pwd)
 create_tmp_workspace() {
     local pkgpath="$1"
     tdir=$(mktemp -d)
-    cp $pkgpath "$tdir"
+    cp "$pkgpath" "$tdir"
     echo "$tdir"
 }
 
@@ -29,7 +29,7 @@ create_tmp_workspace() {
 is_valid_file(){
     local package="$1"
 
-    ext=$(basename $package | sed 's/.*\.//')
+    ext=$(basename "$package" | sed 's/.*\.//')
     [ "$ext" = "deb" -a -f "$package" ] || echo "false"
 }
 
@@ -41,10 +41,10 @@ is_valid_file(){
 # directory.
 extract_archive(){
     archive="$1"
-    ar xv $(basename $archive) 2>&1 > /dev/null
+    ar xv $(basename "$archive") 2>&1 > /dev/null
     for file in $(ar t $(basename $archive)); do
         if [ "$file" != "debian-binary" ] ; then
-            dirpart=$(echo $file | sed 's/\.tar.*//')
+            dirpart=$(echo "$file" | sed 's/\.tar.*//')
             mkdir "$dirpart"
             tar -C "$dirpart" -xaf "$file"
         else
@@ -71,7 +71,8 @@ verify_copyright(){
 # package version.
 print_version() {
     local pkg="$1"
-    local version=$(grep -e "^Version:" control/control | sed 's/^Version:\s//')
+    local version=$(grep -e "^Version:" control/control \
+        | sed -n 's/^Version:\s//p')
     echo "$pkg version $version"
 }
 
@@ -81,7 +82,7 @@ for debpkg in "$@"; do
     if [ -z $(is_valid_file "$debpkg") ]; then
 
         # create work space for the script
-        tdir=$(create_tmp_workspace $debpkg)
+        tdir=$(create_tmp_workspace "$debpkg")
 
         # go to the workspace
         cd "$tdir"
@@ -89,14 +90,14 @@ for debpkg in "$@"; do
         # process archive (.deb package)
         extract_archive "$debpkg"
 
-        package=$(basename $debpkg|awk -F"_" '{ print $1}')
+        package=$(basename "$debpkg"|awk -F"_" '{ print $1}')
         echo --------------------------------------------------
-        verify_copyright $package
-        print_version $package
+        verify_copyright "$package"
+        print_version "$package"
         echo --------------------------------------------------
 
-        cd $CURDIR
-        rm -rf $tdir
+        cd "$CURDIR"
+        rm -rf "$tdir"
     else
         echo "Given file is not a valid deb package" >&2
         exit 2
