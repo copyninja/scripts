@@ -1,0 +1,18 @@
+#!/bin/sh
+set -eu
+if [ $# -ne 1 ]; then
+    echo "Please provide a directory where I should look" >&2
+    exit 2
+fi
+
+directory="$1"
+
+for control_file in $(find "$directory" -name "control" -print); do
+    multi_arch_field=$(sed -n 's|^Multi-Arch:\s||p' "$control_file");
+    package=$(basename $(dirname "$control_file" | sed 's|debian||'))
+    if [ -n "$multi_arch_field" ]; then
+        echo "$package is Multi-Arch: $multi_arch_field"
+    else
+        echo "$package is not multi-arch"
+    fi
+done
