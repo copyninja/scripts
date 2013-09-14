@@ -1,0 +1,30 @@
+#!/bin/sh
+set -eu
+
+while true; do
+    case "$1" in
+	--maintainers)
+	    option="--nouploaders";
+	    shift;
+	    break;
+	    ;;
+	--uploaders)
+	    option="--uploaders";
+	    shift;
+	    break;
+	    ;;
+	--*)
+	    echo "Unknown option $1" >&2
+	    exit 64
+	    ;;
+	*)
+	    echo "Usage: $0 --uploaders|--maintainers package[s]" >&2
+	    exit 2
+	    ;;
+    esac
+done
+
+for package in "$@"; do
+    echo "----- $package -----"
+    apt-cache rdepends "$package" | sed -n 's/^\s//p' | xargs dd-list "$option"
+done
