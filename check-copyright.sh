@@ -30,7 +30,7 @@ is_valid_file(){
     local package="$1"
 
     ext=$(basename "$package" | sed 's/.*\.//')
-    [ "$ext" = "deb" -a -f "$package" ] || echo "false"
+    [ "$ext" = "deb" -a -f "$package" ]
 }
 
 # Function extracts the .deb archive then checks the content of
