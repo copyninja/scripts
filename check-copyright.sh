@@ -41,15 +41,12 @@ is_valid_file(){
 # directory.
 extract_archive(){
     archive="$1"
-    ar xv $(basename "$archive") 2>&1 > /dev/null
+    ar xv $(basename "$archive") 2>&1 >/dev/null || exit 2
     for file in $(ar t $(basename $archive)); do
         if [ "$file" != "debian-binary" ] ; then
             dirpart=$(echo "$file" | sed 's/\.tar.*//')
             mkdir "$dirpart"
             tar -C "$dirpart" -xaf "$file"
-        else
-            [ $(cat "$file") != "2.0" ] && (echo "Format of Debian \
-            archive is not supported!" >&2 && exit 2)
         fi
     done
 }
