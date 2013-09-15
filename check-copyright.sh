@@ -40,36 +40,43 @@ is_valid_file(){
 # It extracts data and control compressed archives to respective
 # directory.
 extract_archive(){
-    archive="$1"
-    ar xv $(basename "$archive") 2>&1 >/dev/null || exit 2
-    for file in $(ar t $(basename $archive)); do
+    local archive="$1"
+    local o=$IFS
+    IFS=$(echo "\n")
+    local package=$(basename "$archive")
+    unset IFS
+    ar xv "$package" 2>&1 >/dev/null || exit 2
+    for file in $(ar t "$package"); do
         if [ "$file" != "debian-binary" ] ; then
             dirpart=$(echo "$file" | sed 's/\.tar.*//')
             mkdir "$dirpart"
             tar -C "$dirpart" -xaf "$file"
         fi
     done
+    IFS="$o"
 }
 
 # Function checks if copyright file exists at usr/share/doc/$package/
 # and prints appropriate statement to output
 verify_copyright(){
     local pkg="$1"
-    local copyright_file=$(find data -name copyright -print)
+    local o=$IFS
+    IFS=$(echo "\n")
 
-    if [ -f data/usr/share/doc/$package/copyright ]; then
+    if [ -f "data/usr/share/doc/$package/copyright" ]; then
         echo "copyright for $pkg [Found]"
     else
         echo "copright for $pkg [Not Found]"
     fi
+    unset IFS
+    IFS="$o"
 }
 
 # Function parses control information of package and prints the
 # package version.
 print_version() {
     local pkg="$1"
-    local version=$(grep -e "^Version:" control/control \
-        | sed -n 's/^Version:\s//p')
+    local version=$(sed -n 's/^Version:\s//p' control/control)
     echo "$pkg version $version"
 }
 
