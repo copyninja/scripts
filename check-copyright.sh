@@ -29,7 +29,7 @@ create_tmp_workspace() {
 is_valid_file(){
     local package="$1"
 
-    ext=$(basename "$package" | sed 's/.*\.//')
+    ext=$(basename "$package" | tr -d "\n" | sed 's/.*\.//')
     [ "$ext" = "deb" -a -f "$package" ]
 }
 
@@ -98,11 +98,11 @@ for debpkg in "$@"; do
         # process archive (.deb package)
         extract_archive "$debpkg"
 
-        package=$(basename "$debpkg"|awk -F"_" '{ print $1}')
-        echo --------------------------------------------------
+        package=$(basename "$debpkg"| tr -d "\n" | awk -F"_" '{ print $1}')
+        echo "--------------------------------------------------"
         verify_copyright "$package"
         print_version "$package"
-        echo --------------------------------------------------
+        echo "--------------------------------------------------"
 
         cd "$CURDIR"
         rm -rf "$tdir"
