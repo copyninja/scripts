@@ -76,7 +76,7 @@ print_version() {
 # Lets iterate over all command line arguments.
 for debpkg in "$@"; do
     # check if we got all Deb packages
-    if [ -z $(is_valid_file "$debpkg") ]; then
+    if is_valid_file "$debpkg"; then
 
         # create work space for the script
         tdir=$(create_tmp_workspace "$debpkg")
