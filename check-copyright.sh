@@ -73,6 +73,17 @@ print_version() {
     echo "$pkg version $version"
 }
 
+if [ ! -x "/usr/bin/ar" ]; then
+    echo "This script requires ar which is part of binutils package" >&2
+    exit 2
+fi
+
+if [ ! -x "/bin/xz" ]; then
+    echo "xz is required for deb created by dpkg >= 1.17 it is part of
+    xz-utils package" >&2
+    exit 2
+fi
+
 # Lets iterate over all command line arguments.
 for debpkg in "$@"; do
     # check if we got all Deb packages
