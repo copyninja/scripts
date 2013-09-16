@@ -113,8 +113,6 @@ for debpkg in "$@"; do
         verify_copyright "$package"
         print_version "$package"
         echo "--------------------------------------------------"
-
-        cd "$CURDIR"
     else
         echo "Given file is not a valid deb package" >&2
         exit 2
