@@ -80,6 +80,7 @@ print_version() {
     echo "$pkg version $version"
 }
 
+
 if [ ! -x "/usr/bin/ar" ]; then
     echo "This script requires ar which is part of binutils package" >&2
     exit 2
@@ -102,6 +103,8 @@ for debpkg in "$@"; do
         # go to the workspace
         cd "$tdir"
 
+        trap "rm -rf $tdir" 0 1 2
+
         # process archive (.deb package)
         extract_archive "$debpkg"
 
@@ -112,7 +115,6 @@ for debpkg in "$@"; do
         echo "--------------------------------------------------"
 
         cd "$CURDIR"
-        rm -rf "$tdir"
     else
         echo "Given file is not a valid deb package" >&2
         exit 2
