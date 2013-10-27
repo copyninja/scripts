@@ -103,12 +103,12 @@ for debpkg in "$@"; do
         # go to the workspace
         cd "$tdir"
 
-        trap "rm -rf $tdir" 0 1 2
+        # trap "rm -rf $tdir" 0 1 2
 
         # process archive (.deb package)
         extract_archive "$debpkg"
 
-        package=$(basename "$debpkg"| tr -d "\n" | awk -F"_" '{ print $1}')
+        package=$(basename "$debpkg"| tr -d "\n " | awk -F"_" '{ print $1}')
         echo "--------------------------------------------------"
         verify_copyright "$package"
         print_version "$package"
