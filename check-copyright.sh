@@ -60,16 +60,12 @@ extract_archive(){
 # and prints appropriate statement to output
 verify_copyright(){
     local pkg="$1"
-    local o=$IFS
-    IFS=$(echo "\n")
 
     if [ -f "data/usr/share/doc/$package/copyright" ]; then
         echo "copyright for $pkg [Found]"
     else
         echo "copright for $pkg [Not Found]"
     fi
-    unset IFS
-    IFS="$o"
 }
 
 # Function parses control information of package and prints the
