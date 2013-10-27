@@ -42,10 +42,10 @@ is_valid_file(){
 extract_archive(){
     local archive="$1"
     local o=$IFS
-    IFS=$(echo "\n")
+    IFS=""
     local package=$(basename "$archive")
     unset IFS
-    ar xv "$package" 2>&1 >/dev/null || exit 2
+    ar xv "$package" >/dev/null 2>&1 || exit 2
     for file in $(ar t "$package"); do
         if [ "$file" != "debian-binary" ] ; then
             dirpart=$(echo "$file" | sed 's/\.tar.*//')
