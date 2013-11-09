@@ -76,6 +76,12 @@ print_version() {
     echo "$pkg version $version"
 }
 
+clean_up (){
+    if [ -d "$tdir" ]; then
+	rm -rf "$tdir"
+    fi
+}
+
 
 if [ ! -x "/usr/bin/ar" ]; then
     echo "This script requires ar which is part of binutils package" >&2
@@ -88,6 +94,9 @@ if [ ! -x "/usr/bin/xz" ]; then
     exit 2
 fi
 
+# Lets make tdir global so we can access it in clean_up routine.
+tdir=""
+
 # Lets iterate over all command line arguments.
 for debpkg in "$@"; do
     # check if we got all Deb packages
@@ -99,7 +108,8 @@ for debpkg in "$@"; do
         # go to the workspace
         cd "$tdir"
 
-        # trap "rm -rf $tdir" 0 1 2
+	# Clean up on shell exit or KILL or TERM and on USR1
+        trap clean_up 0 USR1 KILL TERM
 
         # process archive (.deb package)
         extract_archive "$debpkg"
@@ -109,6 +119,13 @@ for debpkg in "$@"; do
         verify_copyright "$package"
         print_version "$package"
         echo "--------------------------------------------------"
+
+	# Since we are using trap to do cleanup temporary directory
+	# which will only executes when script is exiting, there by
+	# deleted $tdir will be last one.
+	# When processing multiple packages so lets send USR1 to self
+	# to delete after processing each package. 
+	kill -USR1 "$$"
     else
         echo "Given file is not a valid deb package" >&2
         exit 2
