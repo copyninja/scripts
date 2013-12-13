@@ -122,7 +122,7 @@ for debpkg in "$@"; do
 	# which will only executes when script is exiting, there by
 	# deleted $tdir will be last one.
 	# When processing multiple packages so lets send USR1 to self
-	# to delete after processing each package. 
+	# to delete after processing each package.
 	kill -USR1 "$$"
     else
         echo "Given file is not a valid deb package" >&2
