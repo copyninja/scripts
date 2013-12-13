@@ -77,9 +77,7 @@ print_version() {
 }
 
 clean_up (){
-    if [ -d "$tdir" ]; then
-	rm -rf "$tdir"
-    fi
+    rm -rf "$tdir"
 }
 
 
