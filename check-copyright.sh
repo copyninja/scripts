@@ -87,7 +87,7 @@ if [ ! -x "/usr/bin/ar" ]; then
 fi
 
 if [ ! -x "/usr/bin/xz" ]; then
-    echo "xz is required for deb created by dpkg >= 1.17 it is part of
+    echo "xz is required for deb created by dpkg >= 1.17, it is part of
     xz-utils package" >&2
     exit 2
 fi
