@@ -46,7 +46,9 @@ extract_archive(){
     local package=$(basename "$archive")
     unset IFS
     ar xv "$package" >/dev/null 2>&1 || exit 2
-    for file in $(dir --hide="*.deb" "$tdir"); do
+    for extracted_file in $(find "$tdir" -type f \( ! -iname "*.deb" \) -ls |\
+			     awk '{print $11}'); do
+	file=$(IFS="" basename "$extracted_file")
         if [ "$file" != "debian-binary" ] ; then
             dirpart=$(echo "$file" | sed 's/\.tar.*//')
             mkdir "$dirpart"
