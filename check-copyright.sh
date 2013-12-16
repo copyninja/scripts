@@ -48,11 +48,11 @@ extract_archive(){
     ar xv "$package" >/dev/null 2>&1 || exit 2
     for extracted_file in $(find "$tdir" -type f \( ! -iname "*.deb" \) -ls |\
 			     awk '{print $11}'); do
-	file=$(IFS="" basename "$extracted_file")
+	file="$(basename "$extracted_file")"
         if [ "$file" != "debian-binary" ] ; then
             dirpart=$(echo "$file" | sed 's/\.tar.*//')
             mkdir "$dirpart"
-            tar -C "$dirpart" -xaf "$file"
+            tar -C "$dirpart" -xaf "$(echo "$file")"
         fi
     done
     IFS="$o"
