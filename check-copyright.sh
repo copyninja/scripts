@@ -41,10 +41,7 @@ is_valid_file(){
 # directory.
 extract_archive(){
     local archive="$1"
-    local o=$IFS
-    IFS=""
-    local package=$(basename "$archive")
-    unset IFS
+    local package="$(basename "$archive")"
     ar xv "$package" >/dev/null 2>&1 || exit 2
     for extracted_file in $(find "$tdir" -type f \( ! -iname "*.deb" \) -ls |\
 			     awk '{print $11}'); do
@@ -55,7 +52,6 @@ extract_archive(){
             tar -C "$dirpart" -xaf "$(echo "$file")"
         fi
     done
-    IFS="$o"
 }
 
 # Function checks if copyright file exists at usr/share/doc/$package/
