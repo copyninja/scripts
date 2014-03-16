@@ -40,8 +40,9 @@ is_valid_file(){
 # It extracts data and control compressed archives to respective
 # directory.
 extract_archive(){
-    local archive="$1"
-    local package="$(basename "$archive")"
+    local archive package
+    archive="$1"
+    package=$(basename "$archive")
     ar xv "$package" >/dev/null 2>&1 || exit 2
     for extracted_file in $(find "$tdir" -type f \( ! -iname "*.deb" \) -ls |\
 			     awk '{print $11}'); do
